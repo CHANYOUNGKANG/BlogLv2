@@ -12,7 +12,7 @@ import java.util.List;
 @Service
 public class BoardService {
 
-    private final BoardRepository boardRepository;
+    private final BoardRepository boardRepository;//
 
     public BoardService(BoardRepository boardRepository) {
         this.boardRepository = boardRepository;
@@ -48,9 +48,9 @@ public class BoardService {
         if(requestDto.getPassword().equals(board.getPassword())){
 
             board.update(requestDto);
-            return new BoardResponseDto(board);
+            return new BoardResponseDto(board); //원하는값이 나와야하니까 리턴은 전체를 뱉게 바꿔주기 때문에 BoardResponseDto
             }else {
-            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다."); //throw가 리턴 역할을 해줌
 
         }
 

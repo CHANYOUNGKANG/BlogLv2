@@ -22,5 +22,5 @@ public class BoardResponseDto  {
         this.modifiedAt = board.getModifiedAt();
         this.title = board.getTitle();
     }
-
+//왔다 갔다할 데이터형태를 직접만듬 //이건 반환할때
 }
