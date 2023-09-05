@@ -31,21 +31,21 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain filterChain) throws ServletException, IOException {
 
-        String tokenValue = jwtUtil.getJwtFromHeader(req);
+        String tokenValue = jwtUtil.getTokenFromRequest(req);
 
-        if (StringUtils.hasText(tokenValue)) {
+        if (StringUtils.hasText(tokenValue)) { // 토큰이 있는지 확인
 
-            if (!jwtUtil.validateToken(tokenValue)) {
+            if (!jwtUtil.validateToken(tokenValue)) {//토큰이 유효한지 확인
                 log.error("Token Error");
                 return;
             }
 
-            Claims info = jwtUtil.getUserInfoFromToken(tokenValue);
+            Claims info = jwtUtil.getUserInfoFromToken(tokenValue);//토큰에서 정보를 가져온다.
 
             try {
-                setAuthentication(info.getSubject());
+                setAuthentication(info.getSubject());//인증을 처리한다.
             } catch (Exception e) {
-                log.error(e.getMessage());
+                log.error(e.getMessage());//
                 return;
             }
         }
@@ -60,11 +60,15 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         context.setAuthentication(authentication);
 
         SecurityContextHolder.setContext(context);
+        //인증을 처리하는 코드
     }
 
     // 인증 객체 생성
     private Authentication createAuthentication(String username) {
-        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-        return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+        UserDetails userDetails = userDetailsService.loadUserByUsername(username);//username을 통해서 사용자 정보를 가져온다. //UserDetailsServiceImpl에서 구현한 loadUserByUsername() 메소드를 통해서 사용자 정보를 가져온다.
+        return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());//사용자 정보를 통해서 인증 객체를 생성한다. //UsernamePasswordAuthenticationToken을 통해서 인증 객체를 생성한다.
     }
+
+    //인증 객체를 생성하는 코드 //UsernamePasswordAuthenticationToken을 통해서 인증 객체를 생성한다. //사용자 정보를 통해서 인증 객체를 생성한다.
+
 }
