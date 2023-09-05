@@ -1,11 +1,11 @@
 package com.sparta.board.security;
 
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sparta.board.dto.LoginRequestDto;
 import com.sparta.board.entity.UserRoleEnum;
 import com.sparta.board.jwt.JwtUtil;
 import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -42,17 +42,19 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             throw new RuntimeException(e.getMessage());//예외를 던진다.
         }
     }
-    @Override 
-    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
-        log.info("로그인 성공 및 JWT 생성");//로그인에 성공하면 로그를 남긴다.
-        String username = ((UserDetailsImpl) authResult.getPrincipal()).getUsername();//로그인에 성공한 사용자의 username을 가져온다.
-        UserRoleEnum role = ((UserDetailsImpl) authResult.getPrincipal()).getUser().getRole();//로그인에 성공한 사용자의 role을 가져온다.
-        log.info("로그인에 성공한 username, role을 가져온다.");//로그인에 성공하면 로그를 남긴다.
-        String token = jwtUtil.createToken(username, role);//토큰을 생성한다.
-        jwtUtil.addJwtToCookie(token, response);//토큰을 쿠키에 담는다.
-        log.info("토큰 쿠키 가져온다 ㅎ");//로그인에 성공하면 로그를 남긴다.
+    @Override
+    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException {
+        String username = ((UserDetailsImpl) authResult.getPrincipal()).getUsername();
+        UserRoleEnum role = ((UserDetailsImpl) authResult.getPrincipal()).getUser().getRole();
 
-        //토큰을 생성하고 Response 객체에 넣어주는것 까지 수행
+        String token = jwtUtil.createToken(username, role);
+        response.addHeader(JwtUtil.AUTHORIZATION_HEADER, token);
+
+        // 로그인 성공 메세지 전달
+        response.setContentType("text/plain");
+        response.setCharacterEncoding("UTF-8");
+        String massage = "로그인 성공";
+        response.getWriter().write("상태코드 : " + response.getStatus() + ", 메세지 : " + massage);
     }
 
 

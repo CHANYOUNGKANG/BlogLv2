@@ -17,7 +17,7 @@ public class BoardResponseDto  {
     public BoardResponseDto(Board board){
         this.id = board.getId();
         this.contents = board.getContents();
-        this.username = board.getUsername();
+//        this.username = board.getUsername();
         this.createdAt = board.getCreatedAt();
         this.modifiedAt = board.getModifiedAt();
         this.title = board.getTitle();

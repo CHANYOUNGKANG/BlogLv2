@@ -17,32 +17,27 @@ public class Board extends Timestamped {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "username", nullable = false)
-    private String username;
     @Column(name = "contents", nullable = false, length = 500)
     private String contents;
 
     @Column(name = "title", nullable = false, length = 500)
     private String title;
 
-    @Column(name = "password", nullable = false, length = 500)
-    private String password;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
-    public Board(BoardRequestDto requestDto) {
-        this.username = requestDto.getUsername();
+
+    public Board(BoardRequestDto requestDto, User user) {
         this.contents = requestDto.getContents();
         this.title = requestDto.getTitle();
-        this.password = requestDto.getPassword();
+        this.user = user;
     }
 
-    public void update(BoardRequestDto requestDto) {
-        this.username = requestDto.getUsername();
+    public void update(BoardRequestDto requestDto, User user) {
         this.contents = requestDto.getContents();
         this.title = requestDto.getTitle();
-        this.password = requestDto.getPassword();
+        this.user = user;
     }
-
-
-
 
 }
